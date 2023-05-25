@@ -1,5 +1,4 @@
 geopandas
-plotly.express
-plotly.graph_objects
+plotly
 matplotlib
 requests
