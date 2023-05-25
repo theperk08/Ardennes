@@ -1,4 +1,4 @@
-Carte de Charleville-Mézières répertoriant :
+[Carte interactive de Charleville-Mézières]() répertoriant :
  - les bornes de recharges électriques pour les automobiles
  - les parkings à vélo
  - les arrêts de bus
