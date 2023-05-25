@@ -124,8 +124,8 @@ def distance_api_geo(lat_depart, lon_depart, data):
         r = requests.get(f"https://wxs.ign.fr/calcul/geoportail/itineraire/rest/1.0.0/route?resource=bdtopo-osrm&profile=pedestrian&optimization=shortest&start={lon_depart},{lat_depart}&end={lon_velo1},{lat_velo1}&intermediates=&constraints=&geometryFormat=polyline&getSteps=true&getBbox=true")
         routes = json.loads(r.content)
         distance = routes['distance']
-        velo_dist = velo_dist.append([{'lat' : lat_velo1, 'lon' : lon_velo1, 'nom' : nom_velo1, 'distance' : distance}])
-    
+        velo_dist = pdconcat([velo_dist, pd.DataFrame({'lat' : lat_velo1, 'lon' : lon_velo1, 'nom' : nom_velo1, 'distance' : distance}, index = [index])
+                              
     velo_dist = velo_dist.sort_values(by = 'distance')
             
     return velo_dist
