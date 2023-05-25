@@ -99,8 +99,8 @@ def liste_proches(lat_depart, lon_depart, data, nombre, attribut):
         lon_2 = data.loc[index, 'lon']
         nom = data.loc[index, attribut]        
         
-        liste_distances = pd.concat([liste_distances, pd.DataFrame.from_dict({'index': index, 'lat' : lat_2, 'lon' : lon_2, 'distance' : distance_simple(lat_depart, lon_depart, lat_2, lon_2), 'nom' : nom}, index = index)])
-              
+        liste_distances = pd.concat([liste_distances, pd.DataFrame({ 'lat' : lat_2, 'lon' : lon_2, 'distance' : distance_simple(lat_depart, lon_depart, lat_2, lon_2), 'nom' : nom}, index= [index])])
+                  
     
     liste_distances = liste_distances.sort_values(by = 'distance').head(nombre)
     
