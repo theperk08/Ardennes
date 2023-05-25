@@ -278,7 +278,7 @@ if submit1:
             lon = lon_1
         ),
         pitch=0,
-        zoom=14.5,
+        zoom=15,
         style='open-street-map' #'outdoors'
     ),
     width = 800,
