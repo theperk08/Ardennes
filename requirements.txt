@@ -1,4 +1,3 @@
-json
 geopandas
 plotly.express
 plotly.graph_objects
