@@ -205,12 +205,12 @@ if submit1:
     st.write(f'**:violet[lat = {str(round(lat_1,4))} ; lon = {str(round(lon_1, 4))}]**')
     
     # VELOS
-    nombre_velos = 6
+    nombre_velos = 4
     liste_distances_velos = liste_proches(lat_1, lon_1, df_velos, nombre_velos, 'mobilier')    
        
     velo = distance_api_geo(lat_1, lon_1, liste_distances_velos)    
     
-    for i in range(3):
+    for i in range(1):
         lat_velo1 = velo.iloc[i: i + 1, :].lat
         lon_velo1 = velo.iloc[i: i + 1, :].lon
         nom_velo1 = "<span style ='color:blue'>Parking vélo<br>" + velo.iloc[i: i + 1, :].nom + "<br> à " + str(round(velo.iloc[i]["distance"])) + ' mètres</span>'
@@ -222,12 +222,12 @@ if submit1:
     
     # BUS
     
-    nombre_bus = 6
+    nombre_bus = 4
     liste_distances_bus = liste_proches(lat_1, lon_1, df_bus, nombre_bus, 'properties.name')   
    
     bus = distance_api_geo(lat_1, lon_1, liste_distances_bus)
     
-    for i in range(3):        
+    for i in range(1):        
         
         lat_bus1 = bus.iloc[i: i + 1, :].lat
         lon_bus1 = bus.iloc[i: i + 1, :].lon
@@ -240,7 +240,7 @@ if submit1:
     
     # BORNES ELECTRIQUES
     
-    nombre_bornes = 6
+    nombre_bornes = 4
     liste_distances_bornes = liste_proches(lat_1, lon_1, df_bornes, nombre_bornes, 'nom_station')
     
     #st.write('bornes')
@@ -250,7 +250,7 @@ if submit1:
     print('bornes')
     print(borne)
    
-    for i in range(3):
+    for i in range(1):
         lat_borne1 = borne.iloc[i: i + 1, :].lat
         lon_borne1 = borne.iloc[i: i + 1, :].lon
         nom_borne1 = "<span style ='color:green'>Borne électrique auto<br>" + str(borne.iloc[i]['nom']) + "<br> à " + str(round(borne.iloc[i]["distance"])) + ' mètres</span>'     
