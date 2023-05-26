@@ -100,7 +100,7 @@ def liste_proches(lat_depart, lon_depart, data, nombre, attribut):
         nom = data.loc[index, attribut]        
         
         liste_distances = pd.concat([liste_distances, pd.DataFrame({ 'lat' : lat_2, 'lon' : lon_2, 'distance' : distance_simple(lat_depart, lon_depart, lat_2, lon_2), 'nom' : nom}, index= [index])])
-                  
+              
     
     liste_distances = liste_distances.sort_values(by = 'distance').head(nombre)
     
@@ -125,7 +125,7 @@ def distance_api_geo(lat_depart, lon_depart, data):
         routes = json.loads(r.content)
         distance = routes['distance']
         velo_dist = pd.concat([velo_dist, pd.DataFrame({'lat' : lat_velo1, 'lon' : lon_velo1, 'nom' : nom_velo1, 'distance' : distance}, index = [index])])
-                              
+    
     velo_dist = velo_dist.sort_values(by = 'distance')
             
     return velo_dist
@@ -188,6 +188,8 @@ with col2:
 
 if submit1:
     
+    cols1, cols2 = st.columns([1, 2]) # colonnes proportionnelles à la liste des nombres
+    
     # ADRESSE CHOISIE
     adr_choisie = df_adresses.iloc[liste_adresses.index(adresse): liste_adresses.index(adresse) + 1,:]
     
@@ -200,93 +202,97 @@ if submit1:
     ## marquage du point adresse   
     add_point(lat, lon,20, 'purple', f'<span style ="color:purple">Adresse :<br> {adresse}</span>') #, hover1)
     add_point(lat, lon, 8, 'yellow', f'<span style ="color:purple">Adresse :<br> {adresse}</span>') #, hover1)    
-       
-    st.write("**:violet[Pour l'adresse : {} {}]**".format(num_adresse, voie_adresse))
-    st.write(f'**:violet[lat = {str(round(lat_1,4))} ; lon = {str(round(lon_1, 4))}]**')
     
-    # VELOS
-    nombre_velos = 4
-    liste_distances_velos = liste_proches(lat_1, lon_1, df_velos, nombre_velos, 'mobilier')    
-       
-    velo = distance_api_geo(lat_1, lon_1, liste_distances_velos)    
-    
-    for i in range(1):
-        lat_velo1 = velo.iloc[i: i + 1, :].lat
-        lon_velo1 = velo.iloc[i: i + 1, :].lon
-        nom_velo1 = "<span style ='color:blue'>Parking vélo<br>" + velo.iloc[i: i + 1, :].nom + "<br> à " + str(round(velo.iloc[i]["distance"])) + ' mètres</span>'
-        
-        add_point(lat_velo1, lon_velo1, 20, color_velo, nom_velo1) # , hover1)
-        add_point(lat_velo1, lon_velo1, 8, 'yellow', nom_velo1) #, hover1)
-    
-    st.write(f'**:blue[Parking vélo le plus proche ({velo.iloc[0]["nom"]}) à {velo.iloc[0]["distance"]} mètres]**')
-    
-    # BUS
-    
-    nombre_bus = 4
-    liste_distances_bus = liste_proches(lat_1, lon_1, df_bus, nombre_bus, 'properties.name')   
-   
-    bus = distance_api_geo(lat_1, lon_1, liste_distances_bus)
-    
-    for i in range(1):        
-        
-        lat_bus1 = bus.iloc[i: i + 1, :].lat
-        lon_bus1 = bus.iloc[i: i + 1, :].lon
-        nom_bus1 = "<span style ='color:red'>Arrêt de bus<br>" + bus.iloc[i: i + 1, :].nom + "<br> à " + str(round(bus.iloc[i]["distance"])) + ' mètres</span>'
-        
-        add_point(lat_bus1, lon_bus1, 20, color_bus, nom_bus1) #, hover1)
-        add_point(lat_bus1, lon_bus1, 8, 'yellow', nom_bus1) #, hover1)    
-    
-    st.write(f'**:red[Arrêt de bus le plus proche ({bus.iloc[0]["nom"]}) à {bus.iloc[0]["distance"]} mètres]**')
-    
-    # BORNES ELECTRIQUES
-    
-    nombre_bornes = 4
-    liste_distances_bornes = liste_proches(lat_1, lon_1, df_bornes, nombre_bornes, 'nom_station')
-    
-    #st.write('bornes')
-    #st.write(liste_distances_bornes)
-    
-    borne = distance_api_geo(lat_1, lon_1, liste_distances_bornes)
-    print('bornes')
-    print(borne)
-   
-    for i in range(1):
-        lat_borne1 = borne.iloc[i: i + 1, :].lat
-        lon_borne1 = borne.iloc[i: i + 1, :].lon
-        nom_borne1 = "<span style ='color:green'>Borne électrique auto<br>" + str(borne.iloc[i]['nom']) + "<br> à " + str(round(borne.iloc[i]["distance"])) + ' mètres</span>'     
-        
-        add_point(lat_borne1, lon_borne1, 20, color_borne, nom_borne1) #, hover1)
-        add_point(lat_borne1, lon_borne1, 8, 'yellow', nom_borne1) #, hover1)    
-        
-    st.markdown(f'**:green[Borne auto de recharge la plus proche ({borne.iloc[0]["nom"]}) à {borne.iloc[0]["distance"]} mètres]**')
-                
-        
-    # FIGURE TOTALE
-    
-    fig.update_layout(
-    #title='Bornes, vélos, bus',
-    title = dict({'text':'<span style="color:blue;">Parkings vélos</span> + <span style="color:red;">Arrêts bus</span> + <span style="color:green;">Bornes autos électriques</span>',
-                                 'x' : 0.2}),
-    autosize=True,
-    hovermode='closest',
-    showlegend=False,
-    mapbox=dict(
-        #accesstoken=mapbox_access_token,
-        bearing=0,
-        center=dict(
-            lat = lat_1,
-            lon = lon_1
+    with cols1:
+        for k in range(10):
+            st.write(' ')
+        st.write("**:violet[Pour l'adresse : {} {}]**".format(num_adresse, voie_adresse))
+        st.write(f'**:violet[lat = {str(round(lat_1,4))} ; lon = {str(round(lon_1, 4))}]**')
+
+        # VELOS
+        nombre_velos = 3
+        liste_distances_velos = liste_proches(lat_1, lon_1, df_velos, nombre_velos, 'mobilier')    
+
+        velo = distance_api_geo(lat_1, lon_1, liste_distances_velos)    
+
+        for i in range(1):
+            lat_velo1 = velo.iloc[i: i + 1, :].lat
+            lon_velo1 = velo.iloc[i: i + 1, :].lon
+            nom_velo1 = "<span style ='color:blue'>Parking vélo<br>" + velo.iloc[i: i + 1, :].nom + "<br> à " + str(round(velo.iloc[i]["distance"])) + ' mètres</span>'
+
+            add_point(lat_velo1, lon_velo1, 20, color_velo, nom_velo1) # , hover1)
+            add_point(lat_velo1, lon_velo1, 8, 'yellow', nom_velo1) #, hover1)
+
+        st.write(f'**:blue[Parking vélo le plus proche ({velo.iloc[0]["nom"]}) à {velo.iloc[0]["distance"]} mètres]**')
+
+        # BUS
+
+        nombre_bus = 3
+        liste_distances_bus = liste_proches(lat_1, lon_1, df_bus, nombre_bus, 'properties.name')   
+
+        bus = distance_api_geo(lat_1, lon_1, liste_distances_bus)
+
+        for i in range(1):        
+
+            lat_bus1 = bus.iloc[i: i + 1, :].lat
+            lon_bus1 = bus.iloc[i: i + 1, :].lon
+            nom_bus1 = "<span style ='color:red'>Arrêt de bus<br>" + bus.iloc[i: i + 1, :].nom + "<br> à " + str(round(bus.iloc[i]["distance"])) + ' mètres</span>'
+
+            add_point(lat_bus1, lon_bus1, 20, color_bus, nom_bus1) #, hover1)
+            add_point(lat_bus1, lon_bus1, 8, 'yellow', nom_bus1) #, hover1)    
+
+        st.write(f'**:red[Arrêt de bus le plus proche ({bus.iloc[0]["nom"]}) à {bus.iloc[0]["distance"]} mètres]**')
+
+        # BORNES ELECTRIQUES
+
+        nombre_bornes = 3
+        liste_distances_bornes = liste_proches(lat_1, lon_1, df_bornes, nombre_bornes, 'nom_station')
+
+        #st.write('bornes')
+        #st.write(liste_distances_bornes)
+
+        borne = distance_api_geo(lat_1, lon_1, liste_distances_bornes)
+        print('bornes')
+        print(borne)
+
+        for i in range(1):
+            lat_borne1 = borne.iloc[i: i + 1, :].lat
+            lon_borne1 = borne.iloc[i: i + 1, :].lon
+            nom_borne1 = "<span style ='color:green'>Borne électrique auto<br>" + str(borne.iloc[i]['nom']) + "<br> à " + str(round(borne.iloc[i]["distance"])) + ' mètres</span>'     
+
+            add_point(lat_borne1, lon_borne1, 20, color_borne, nom_borne1) #, hover1)
+            add_point(lat_borne1, lon_borne1, 8, 'yellow', nom_borne1) #, hover1)    
+
+        st.markdown(f'**:green[Borne auto de recharge la plus proche ({borne.iloc[0]["nom"]}) à {borne.iloc[0]["distance"]} mètres]**')
+
+
+        # FIGURE TOTALE
+
+        fig.update_layout(
+        #title='Bornes, vélos, bus',
+        title = dict({'text':'<span style="color:blue;">Parkings vélos</span> + <span style="color:red;">Arrêts bus</span> + <span style="color:green;">Bornes autos électriques</span>',
+                                     'x' : 0.2}),
+        autosize=True,
+        hovermode='closest',
+        showlegend=False,
+        mapbox=dict(
+            #accesstoken=mapbox_access_token,
+            bearing=0,
+            center=dict(
+                lat = lat_1,
+                lon = lon_1
+            ),
+            pitch=0,
+            zoom=14.5,
+            style='open-street-map' #'outdoors'
         ),
-        pitch=0,
-        zoom=15,
-        style='open-street-map' #'outdoors'
-    ),
-    width = 800,
-    height = 800
-    )
+        width = 600,
+        height = 600
+        )
     
     ## Affichage de la figure
-    st.plotly_chart(fig)
+    with cols2:
+        st.plotly_chart(fig)
     
     
     if False:
