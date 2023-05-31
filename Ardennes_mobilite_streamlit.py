@@ -139,7 +139,7 @@ bornes_lon = df_bornes.lon
 locations_bornes_name = df_bornes.nom_station
 hover_bornes = locations_bornes_name + '<br>' + bornes_lat.map(lambda x : str(round(x, 4)) + 'N') + ' - ' + bornes_lon.map(lambda x : str(round(x, 4)) + 'E')
 
-fig_bornes = add_point(bornes_lat, bornes_lon, 10, 'black', hover_bornes) #, hover1)
+fig_bornes = add_point(bornes_lat, bornes_lon, 10, 'green', hover_bornes) #, hover1)
 
 ## VELOS
 velos_lat = df_velos.lat
