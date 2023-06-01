@@ -170,11 +170,6 @@ fig_bus = add_point(bus_lat, bus_lon, 10, 'red', hover_bus) #, hover1)
 #    page['page_name'] = new_page_names[page['page_name']]      
     
     
-st.set_page_config(
-    page_title = "Ardennes Mobilité",
-    layout = "wide",
-    page_icon = "🚲")
-
 show_pages(
            [
                 Page("Ardennes_mobilite_streamlit.py", "Mobilité Charleville", "🚲"),
@@ -182,6 +177,14 @@ show_pages(
               
             ]
         )
+
+
+st.set_page_config(
+    page_title = "Ardennes Mobilité",
+    layout = "wide",
+    page_icon = "🚲")
+
+
 
 
 
