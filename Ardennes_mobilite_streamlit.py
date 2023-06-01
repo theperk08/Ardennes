@@ -175,13 +175,13 @@ st.set_page_config(
     layout = "wide",
     page_icon = "🚲")
 
-#show_pages(
-#           [
-#                Page("Ardennes_mobilite_streamlit.py", "Mobilité Charleville", "🚲"),
-#                Page("01-Ardennes_immo.py", 'Marché Immobilier Charleville', ":home:"),
+show_pages(
+           [
+                Page("Ardennes_mobilite_streamlit.py", "Mobilité Charleville", "🚲"),
+                Page("01-Ardennes_immo.py", 'Marché Immobilier Charleville', "🏠"),
               
-#            ]
-#        )
+            ]
+        )
 
 
 
