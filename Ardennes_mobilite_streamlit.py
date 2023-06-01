@@ -160,24 +160,16 @@ fig_bus = add_point(bus_lat, bus_lon, 10, 'red', hover_bus) #, hover1)
 
 # DEBUT PAGE STREAMLIT
 
-#pages = st.source_util.get_pages('Ardennes_mobilite_streamlit.py')
-#new_page_names = {
-#  'Ardennes_mobilite_streamlit': '🚲 Mobilité Charleville',
-# }
+pages = st.source_util.get_pages('Ardennes_mobilite_streamlit.py')
+new_page_names = {
+  'Ardennes_mobilite_streamlit': '🚲 Mobilité Charleville',
+ }
 
-#for key, page in pages.items():
-#  if page['page_name'] in new_page_names:
-#    page['page_name'] = new_page_names[page['page_name']]      
+for key, page in pages.items():
+  if page['page_name'] in new_page_names:
+    page['page_name'] = new_page_names[page['page_name']]      
     
-    
-show_pages(
-           [
-                Page("Ardennes_mobilite_streamlit.py", "Mobilité Charleville", "🚲"),
-                Page("01-Ardennes_immo.py", 'Marché Immobilier Charleville', "🏠"),
-              
-            ]
-        )
-
+   
 
 st.set_page_config(
     page_title = "Ardennes Mobilité",
