@@ -6,12 +6,15 @@
 
 et d'autre part :
 
- - Le marché immobilier à Charleville-Mézières
- - La consommation énergétique
+ - La consommation énergétique dans le département des Ardennes
+ - Le marché immobilier à Charleville-Mézières 
 
 
 
-Source de données : [OpenStreetMap](https://www.openstreetmap.org/) (via [Geodatamine](https://geodatamine.fr/)  et [Overpass-turbo](https://overpass-turbo.eu/) )
+Source de données :
+ - [OpenStreetMap](https://www.openstreetmap.org/) (via [Geodatamine](https://geodatamine.fr/)  et [Overpass-turbo](https://overpass-turbo.eu/) )  
+ - [Data Gouv](https://www.data.gouv.fr/fr/pages/donnees-energie/)  
+ - [INSEE](https://www.insee.fr/fr/statistiques/6683037)
 
 Lien vers l'appli : [Appli-Mobilité](https://ardennes-mobilite.streamlit.app/)  
 <a href="https://ardennes-mobilite.streamlit.app/" target="_blank"><img src="Appli_Mobilite.jpg" width="800" height="600">
