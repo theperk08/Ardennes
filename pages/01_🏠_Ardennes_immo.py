@@ -8,4 +8,4 @@ st.header("Données du marché immobilier à Charleville-Mézières")
 
 HtmlFile = open("Immo_08.html", 'r', encoding='utf-8')
 source_code = HtmlFile.read() 
-components.html(source_code, width = 1000, height = 800)
+components.html(source_code, width = 1000, height = 1000)
