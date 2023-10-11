@@ -29,6 +29,14 @@ df_velos['lat'] = df_velos['coordonneesxy'].apply(lambda x: x.split(',')[1][:-1]
 df_velos['capacite'].fillna(0, inplace = True)
 color_velo = 'blue'
 
+# BORNES CYCLAM
+url_cyclam = 'data_charleville_parking_cyclam.csv'
+df_cyclam = pd.read_csv(url_cyclam, sep=';')
+df_cyclam['lon'] = df_cyclam['position.longitude']
+df_cyclam['lat'] = df_cyclam['position.latitude']
+#df_cyclam['capacite'].fillna(0, inplace = True)
+color_cyclam = 'lightblue'
+
 # ARRETS BUS
 url = "data_charleville_bus.geojson"
 df_bus = pd.DataFrame()
@@ -149,6 +157,15 @@ hover_velos = locations_velos_name + '<br>' + velos_lat.map(lambda x : str(round
 
 fig_velos = add_point(velos_lat, velos_lon, 10, 'blue', hover_velos) #, hover1)
 
+## CYCLAM
+cyclam_lat = df_cyclam['position.latitude']
+cyclam_lon = df_cyclam['position.longitude']
+locations_cyclam_name = df_cyclam.name
+hover_velos = locations_velos_name + '<br>' + cyclam_lat.map(lambda x : str(round(x, 4)) + 'N') + ' - ' + cyclam_lon.map(lambda x : str(round(x, 4)) + 'E')
+
+fig_cyclam = add_point(cyclam_lat, cyclam_lon, 10, 'lightblue', hover_velos) #, hover1)
+
+
 ## BUS
 bus_lat = df_bus.lat
 bus_lon = df_bus.lon
@@ -182,10 +199,10 @@ st.set_page_config(
 
 col1, col2, col3 = st.columns(3)
 with col2:
-    st.markdown('Vous habitez ou vous vous rendez à **Charleville-Mézières**')
-    st.markdown('et vous souhaiteriez connaître les points de mobilité')
-    st.markdown('(**:blue[parking vélo], :red[arrêt de bus], :green[borne de recharge électrique auto]**)')
-    st.markdown('les plus proches : **:violet[entrez une adresse...]**')
+    st.markdown('<h4><center>Vous habitez ou vous vous rendez à <b>Charleville-Mézières</b></center></h4>', unsafe_allow_html = True)
+    st.markdown('<h4><center>et vous souhaiteriez connaître les points de mobilité</center></h4>', unsafe_allow_html = True)
+    st.markdown("(<span style='color:blue;'>parking vélo</span>, <span style='color:lightblue;'>stations cyclam</span>, <span style='color:red;'>arrêt de bus</span>, <span style='color:green;'>borne de recharge électrique auto</span>)", unsafe_allow_html = True)
+    st.markdown("<h4><center>les plus proches : <span style='color:purple;'>entrez une adresse...</span></center></h4>", unsafe_allow_html = True)
 
     with st.form('form_1'):
         adresse = st.selectbox("Adresse à Charleville-Mézières : ",
@@ -238,6 +255,23 @@ if submit1:
             add_point(lat_velo1, lon_velo1, 8, 'yellow', nom_velo1) #, hover1)
 
         st.write(f'**:blue[Parking vélo le plus proche ({velo.iloc[0]["nom"]}) à {velo.iloc[0]["distance"]} mètres]**')
+        
+        # CYCLAM       
+        nombre_velos = 3
+        liste_distances_velos = liste_proches(lat_1, lon_1, df_cyclam, nombre_velos, 'name')    
+
+        velo = distance_api_geo(lat_1, lon_1, liste_distances_velos)    
+
+        for i in range(1):
+            lat_velo1 = velo.iloc[i: i + 1, :].lat
+            lon_velo1 = velo.iloc[i: i + 1, :].lon
+            nom_velo1 = "<span style ='color:lightblue'>Station cyclam<br>" + velo.iloc[i: i + 1, :].nom + "<br> à " + str(round(velo.iloc[i]["distance"])) + ' mètres</span>'
+
+            add_point(lat_velo1, lon_velo1, 20, color_cyclam, nom_velo1) # , hover1)
+            add_point(lat_velo1, lon_velo1, 8, 'yellow', nom_velo1) #, hover1)
+
+        st.markdown(f"<span style ='color:lightblue'>Station cyclam la plus proche ({velo.iloc[0]['nom']}) à {velo.iloc[0]['distance']} mètres", unsafe_allow_html = True)
+
 
         # BUS
 
@@ -284,7 +318,7 @@ if submit1:
 
         fig.update_layout(
         #title='Bornes, vélos, bus',
-        title = dict({'text':'<span style="color:blue;">Parkings vélos</span> + <span style="color:red;">Arrêts bus</span> + <span style="color:green;">Bornes autos électriques</span>',
+        title = dict({'text':'<span style="color:blue;">Parkings vélos</span> + <span style="color:lightblue;">Stations cyclam</span> + <span style="color:red;">Arrêts bus</span> + <span style="color:green;">Bornes autos électriques</span>',
                                      'x' : 0.2}),
         autosize=True,
         hovermode='closest',
@@ -300,8 +334,8 @@ if submit1:
             zoom=14.5,
             style='open-street-map' #'outdoors'
         ),
-        width = 600,
-        height = 600
+        width = 700,
+        height = 700
         )
     
     ## Affichage de la figure
