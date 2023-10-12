@@ -8,6 +8,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import matplotlib as plt
 import requests
+from geopy.distance import geodesic as GD
 
 # cd Documents\Data_Analyse\Ardennes
 # streamlit run Ardennes_mobilite_streamlit.py
@@ -108,8 +109,8 @@ def liste_proches(lat_depart, lon_depart, data, nombre, attribut):
         lon_2 = data.loc[index, 'lon']
         nom = data.loc[index, attribut]        
         
-        liste_distances = pd.concat([liste_distances, pd.DataFrame({ 'lat' : lat_2, 'lon' : lon_2, 'distance' : distance_simple(lat_depart, lon_depart, lat_2, lon_2), 'nom' : nom}, index= [index])])
-              
+        #liste_distances = pd.concat([liste_distances, pd.DataFrame({ 'lat' : lat_2, 'lon' : lon_2, 'distance' : distance_simple(lat_depart, lon_depart, lat_2, lon_2), 'nom' : nom}, index= [index])])
+        liste_distances = pd.concat([liste_distances, pd.DataFrame({ 'lat' : lat_2, 'lon' : lon_2, 'distance' : GD((lat_depart, lon_depart), (lat_2, lon_2)).m, 'nom' : nom}, index= [index])])  
     
     liste_distances = liste_distances.sort_values(by = 'distance').head(nombre)
     
@@ -243,7 +244,7 @@ if submit1:
         st.write(f'**:violet[lat = {str(round(lat_1,4))} ; lon = {str(round(lon_1, 4))}]**')
 
         # VELOS
-        nombre_velos = 3
+        nombre_velos = 5
         liste_distances_velos = liste_proches(lat_1, lon_1, df_velos, nombre_velos, 'mobilier')    
 
         velo = distance_api_geo(lat_1, lon_1, liste_distances_velos)    
@@ -259,7 +260,7 @@ if submit1:
         
         
         # CYCLAM       
-        nombre_velos = 3
+        nombre_velos = 5
         liste_distances_velos = liste_proches(lat_1, lon_1, df_cyclam, nombre_velos, 'name')    
 
         velo = distance_api_geo(lat_1, lon_1, liste_distances_velos)    
@@ -279,7 +280,7 @@ if submit1:
         
         # BUS
 
-        nombre_bus = 3
+        nombre_bus = 5
         liste_distances_bus = liste_proches(lat_1, lon_1, df_bus, nombre_bus, 'properties.name')   
 
         bus = distance_api_geo(lat_1, lon_1, liste_distances_bus)
@@ -297,7 +298,7 @@ if submit1:
 
         # BORNES ELECTRIQUES
 
-        nombre_bornes = 3
+        nombre_bornes = 5
         liste_distances_bornes = liste_proches(lat_1, lon_1, df_bornes, nombre_bornes, 'nom_station')
 
         #st.write('bornes')
