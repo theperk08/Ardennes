@@ -20,6 +20,6 @@ Source de données :
 
 Lien vers l'appli : [Appli-Mobilité](https://ardennes-mobilite.streamlit.app/)  
 <p>
- <a href="https://ardennes-mobilite.streamlit.app/" target="_blank"><img src="Appli_Mobilite.jpg" width="600" height="600">
-<a href="https://ardennes-mobilite.streamlit.app/" target="_blank"><img src="Capture1.jpg" width="600" height="600">
+ <a href="https://ardennes-mobilite.streamlit.app/" target="_blank"><img src="Appli_Mobilite.jpg" width="800" height="600">
+<a href="https://ardennes-mobilite.streamlit.app/" target="_blank"><img src="Capture1.jpg" width="800" height="600">
  </p>
