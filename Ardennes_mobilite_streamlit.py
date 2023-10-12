@@ -35,7 +35,7 @@ df_cyclam = pd.read_csv(url_cyclam, sep=';')
 df_cyclam['lon'] = df_cyclam['position.longitude']
 df_cyclam['lat'] = df_cyclam['position.latitude']
 #df_cyclam['capacite'].fillna(0, inplace = True)
-color_cyclam = 'lightblue'
+color_cyclam = 'dodgerblue'
 
 # ARRETS BUS
 url = "data_charleville_bus.geojson"
@@ -62,6 +62,7 @@ def add_figure(fig1, fig2):
 
 def add_point(lat, lon, size, color, text): #, hovertemp):
     point = go.Scattermapbox(lat = lat, lon = lon,
+                             mode = 'markers',
                              marker = {'size': size, 'color': color},
                              text = text,
                              hoverinfo='text'
@@ -145,34 +146,35 @@ fig = go.Figure()
 bornes_lat = df_bornes.lat
 bornes_lon = df_bornes.lon
 locations_bornes_name = df_bornes.nom_station
-hover_bornes = locations_bornes_name + '<br>' + bornes_lat.map(lambda x : str(round(x, 4)) + 'N') + ' - ' + bornes_lon.map(lambda x : str(round(x, 4)) + 'E')
+hover_bornes = 'Borne recharge auto' + '<br>' + locations_bornes_name + '<br>' + bornes_lat.map(lambda x : str(round(x, 4)) + 'N') + ' - ' + bornes_lon.map(lambda x : str(round(x, 4)) + 'E')
 
-fig_bornes = add_point(bornes_lat, bornes_lon, 10, 'green', hover_bornes) #, hover1)
+fig_bornes = add_point(bornes_lat, bornes_lon, 10,  color_borne, hover_bornes) #, hover1)
 
 ## VELOS
 velos_lat = df_velos.lat
 velos_lon = df_velos.lon
 locations_velos_name = df_velos.mobilier
-hover_velos = locations_velos_name + '<br>' + velos_lat.map(lambda x : str(round(x, 4)) + 'N') + ' - ' + velos_lon.map(lambda x : str(round(x, 4)) + 'E')
+hover_velos = 'Parking vélo' + '<br>' + locations_velos_name + '<br>' + velos_lat.map(lambda x : str(round(x, 4)) + 'N') + ' - ' + velos_lon.map(lambda x : str(round(x, 4)) + 'E')
 
-fig_velos = add_point(velos_lat, velos_lon, 10, 'blue', hover_velos) #, hover1)
+fig_velos = add_point(velos_lat, velos_lon, 10, color_velo, hover_velos) #, hover1)
 
 ## CYCLAM
 cyclam_lat = df_cyclam['position.latitude']
 cyclam_lon = df_cyclam['position.longitude']
 locations_cyclam_name = df_cyclam.name
-hover_velos = locations_velos_name + '<br>' + cyclam_lat.map(lambda x : str(round(x, 4)) + 'N') + ' - ' + cyclam_lon.map(lambda x : str(round(x, 4)) + 'E')
+hover_velos = 'Station Cyclam' + '<br>' + locations_cyclam_name + '<br>' + cyclam_lat.map(lambda x : str(round(x, 4)) + 'N') + ' - ' + cyclam_lon.map(lambda x : str(round(x, 4)) + 'E')
 
-fig_cyclam = add_point(cyclam_lat, cyclam_lon, 10, 'lightblue', hover_velos) #, hover1)
+fig_cyclam = add_point(cyclam_lat, cyclam_lon, 10, color_cyclam, hover_velos) #, hover1)
+
 
 
 ## BUS
 bus_lat = df_bus.lat
 bus_lon = df_bus.lon
 locations_bus_name = df_bus['properties.name']
-hover_bus = locations_bus_name + '<br>' + bus_lat.map(lambda x : str(round(x, 4)) + 'N') + ' - ' + bus_lon.map(lambda x : str(round(x, 4)) + 'E')
+hover_bus = 'Arrêt de bus' + '<br>' + locations_bus_name + '<br>' + bus_lat.map(lambda x : str(round(x, 4)) + 'N') + ' - ' + bus_lon.map(lambda x : str(round(x, 4)) + 'E')
 
-fig_bus = add_point(bus_lat, bus_lon, 10, 'red', hover_bus) #, hover1)
+fig_bus = add_point(bus_lat, bus_lon, 10, color_bus, hover_bus) #, hover1)
 
 
 # DEBUT PAGE STREAMLIT
@@ -201,7 +203,7 @@ col1, col2, col3 = st.columns(3)
 with col2:
     st.markdown('<h4><center>Vous habitez ou vous vous rendez à <b>Charleville-Mézières</b></center></h4>', unsafe_allow_html = True)
     st.markdown('<h4><center>et vous souhaiteriez connaître les points de mobilité</center></h4>', unsafe_allow_html = True)
-    st.markdown("(<span style='color:blue;'>parking vélo</span>, <span style='color:lightblue;'>stations cyclam</span>, <span style='color:red;'>arrêt de bus</span>, <span style='color:green;'>borne de recharge électrique auto</span>)", unsafe_allow_html = True)
+    st.markdown("<center>(<span style='color:{velo};'>parking vélo</span>, <a href = 'https://cyclam.ecovelo.mobi/#/home' target='_blank'  style='color:{cyclam};'>station cyclam</a>, <a href='https://www.bustac.fr/' target ='_blank' style='color:{bus};'>arrêt de bus</a>, <span style='color:{borne};'>borne de recharge électrique auto</span>)</center>".format(velo=color_velo, cyclam=color_cyclam, bus=color_bus, borne=color_borne), unsafe_allow_html = True)
     st.markdown("<h4><center>les plus proches : <span style='color:purple;'>entrez une adresse...</span></center></h4>", unsafe_allow_html = True)
 
     with st.form('form_1'):
@@ -249,12 +251,12 @@ if submit1:
         for i in range(1):
             lat_velo1 = velo.iloc[i: i + 1, :].lat
             lon_velo1 = velo.iloc[i: i + 1, :].lon
-            nom_velo1 = "<span style ='color:blue'>Parking vélo<br>" + velo.iloc[i: i + 1, :].nom + "<br> à " + str(round(velo.iloc[i]["distance"])) + ' mètres</span>'
+            nom_velo1 = "<span style ='color:{velo}'>Parking vélo<br>".format(velo=color_velo) + velo.iloc[i: i + 1, :].nom + "<br> à " + str(round(velo.iloc[i]["distance"])) + ' mètres</span>'
 
             add_point(lat_velo1, lon_velo1, 20, color_velo, nom_velo1) # , hover1)
             add_point(lat_velo1, lon_velo1, 8, 'yellow', nom_velo1) #, hover1)
-
-        st.write(f'**:blue[Parking vélo le plus proche ({velo.iloc[0]["nom"]}) à {velo.iloc[0]["distance"]} mètres]**')
+        st.markdown('<span style ="color:{velo}">Parking vélo le plus proche ({nom}) à {distance} mètres'.format(velo=color_velo, nom = velo.iloc[0]['nom'], distance = velo.iloc[0]['distance']), unsafe_allow_html = True)
+        
         
         # CYCLAM       
         nombre_velos = 3
@@ -265,14 +267,16 @@ if submit1:
         for i in range(1):
             lat_velo1 = velo.iloc[i: i + 1, :].lat
             lon_velo1 = velo.iloc[i: i + 1, :].lon
-            nom_velo1 = "<span style ='color:lightblue'>Station cyclam<br>" + velo.iloc[i: i + 1, :].nom + "<br> à " + str(round(velo.iloc[i]["distance"])) + ' mètres</span>'
+            nom_velo1 = "<span style ='color:{cyclam}'>Station cyclam<br>".format(cyclam=color_cyclam) + velo.iloc[i: i + 1, :].nom + "<br> à " + str(round(velo.iloc[i]["distance"])) + ' mètres</span>'
 
             add_point(lat_velo1, lon_velo1, 20, color_cyclam, nom_velo1) # , hover1)
             add_point(lat_velo1, lon_velo1, 8, 'yellow', nom_velo1) #, hover1)
 
-        st.markdown(f"<span style ='color:lightblue'>Station cyclam la plus proche ({velo.iloc[0]['nom']}) à {velo.iloc[0]['distance']} mètres", unsafe_allow_html = True)
+        st.markdown("<span style ='color:{cyclam}'>Station cyclam la plus proche ({nom}) à {distance} mètres".format(cyclam=color_cyclam, nom = velo.iloc[0]['nom'], distance = velo.iloc[0]['distance']), unsafe_allow_html = True)
 
-
+       
+        
+        
         # BUS
 
         nombre_bus = 3
@@ -284,12 +288,12 @@ if submit1:
 
             lat_bus1 = bus.iloc[i: i + 1, :].lat
             lon_bus1 = bus.iloc[i: i + 1, :].lon
-            nom_bus1 = "<span style ='color:red'>Arrêt de bus<br>" + bus.iloc[i: i + 1, :].nom + "<br> à " + str(round(bus.iloc[i]["distance"])) + ' mètres</span>'
+            nom_bus1 = "<span style ='color:{bus}'>Arrêt de bus<br>".format(bus=color_bus) + bus.iloc[i: i + 1, :].nom + "<br> à " + str(round(bus.iloc[i]["distance"])) + ' mètres</span>'
 
             add_point(lat_bus1, lon_bus1, 20, color_bus, nom_bus1) #, hover1)
             add_point(lat_bus1, lon_bus1, 8, 'yellow', nom_bus1) #, hover1)    
 
-        st.write(f'**:red[Arrêt de bus le plus proche ({bus.iloc[0]["nom"]}) à {bus.iloc[0]["distance"]} mètres]**')
+        st.markdown("<span style ='color:{bus}'>Arrêt de bus le plus proche ({nom}) à {distance} mètres".format(bus=color_bus, nom = bus.iloc[0]['nom'], distance = bus.iloc[0]['distance']),unsafe_allow_html = True) 
 
         # BORNES ELECTRIQUES
 
@@ -306,19 +310,19 @@ if submit1:
         for i in range(1):
             lat_borne1 = borne.iloc[i: i + 1, :].lat
             lon_borne1 = borne.iloc[i: i + 1, :].lon
-            nom_borne1 = "<span style ='color:green'>Borne électrique auto<br>" + str(borne.iloc[i]['nom']) + "<br> à " + str(round(borne.iloc[i]["distance"])) + ' mètres</span>'     
+            nom_borne1 = "<span style ='color:{borne}'>Borne électrique auto<br>".format(borne=color_borne) + str(borne.iloc[i]['nom']) + "<br> à " + str(round(borne.iloc[i]["distance"])) + ' mètres</span>'     
 
             add_point(lat_borne1, lon_borne1, 20, color_borne, nom_borne1) #, hover1)
             add_point(lat_borne1, lon_borne1, 8, 'yellow', nom_borne1) #, hover1)    
 
-        st.markdown(f'**:green[Borne auto de recharge la plus proche ({borne.iloc[0]["nom"]}) à {borne.iloc[0]["distance"]} mètres]**')
+        st.markdown("<span style ='color:{borne}'>Borne auto de recharge la plus proche ({nom}) à {distance} mètres".format(borne=color_borne, nom = borne.iloc[0]['nom'], distance = borne.iloc[0]['distance']), unsafe_allow_html = True)
 
 
         # FIGURE TOTALE
 
         fig.update_layout(
         #title='Bornes, vélos, bus',
-        title = dict({'text':'<span style="color:blue;">Parkings vélos</span> + <span style="color:lightblue;">Stations cyclam</span> + <span style="color:red;">Arrêts bus</span> + <span style="color:green;">Bornes autos électriques</span>',
+        title = dict({'text':'<span style="color:{velo};">Parkings vélos</span> + <span style="color:{cyclam};">Stations cyclam</span> + <span style="color:{bus};">Arrêts bus</span> + <span style="color:{borne};">Bornes autos électriques</span>'.format(velo=color_velo, cyclam=color_cyclam, bus=color_bus, borne=color_borne),
                                      'x' : 0.2}),
         autosize=True,
         hovermode='closest',
@@ -332,7 +336,7 @@ if submit1:
             ),
             pitch=0,
             zoom=14.5,
-            style='open-street-map' #'outdoors'
+            style= 'open-street-map' #'outdoors'
         ),
         width = 700,
         height = 700
