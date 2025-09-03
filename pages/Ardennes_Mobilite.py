@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import json
 import geopandas as gpd
+import time
 
 import plotly.express as px
 import plotly.graph_objects as go
@@ -129,9 +130,14 @@ def distance_api_geo(lat_depart, lon_depart, data):
         print(row)
         lat_velo1 = row.lat
         lon_velo1 = row.lon
-        nom_velo1 = row.nom       
+        nom_velo1 = row.nom   
+
+        print(f"https://data.geopf.fr/navigation/itineraire?resource=bdtopo-osrm&profile=pedestrian&optimization=shortest&start={lon_depart},{lat_depart}&end={lon_velo1},{lat_velo1}&intermediates=&constraints=&geometryFormat=polyline&getSteps=true&getBbox=true")
         
-        r = requests.get(f"https://wxs.ign.fr/calcul/geoportail/itineraire/rest/1.0.0/route?resource=bdtopo-osrm&profile=pedestrian&optimization=shortest&start={lon_depart},{lat_depart}&end={lon_velo1},{lat_velo1}&intermediates=&constraints=&geometryFormat=polyline&getSteps=true&getBbox=true")
+        # r = requests.get(f"https://wxs.ign.fr/calcul/geoportail/itineraire/rest/1.0.0/route?resource=bdtopo-osrm&profile=pedestrian&optimization=shortest&start={lon_depart},{lat_depart}&end={lon_velo1},{lat_velo1}&intermediates=&constraints=&geometryFormat=polyline&getSteps=true&getBbox=true")
+        r = requests.get(f"https://data.geopf.fr/navigation/itineraire?resource=bdtopo-osrm&profile=pedestrian&optimization=shortest&start={lon_depart},{lat_depart}&end={lon_velo1},{lat_velo1}&intermediates=&constraints=&geometryFormat=polyline&getSteps=true&getBbox=true")
+        
+        print(r.content)
         routes = json.loads(r.content)
         distance = routes['distance']
         velo_dist = pd.concat([velo_dist, pd.DataFrame({'lat' : lat_velo1, 'lon' : lon_velo1, 'nom' : nom_velo1, 'distance' : distance}, index = [index])])
@@ -242,6 +248,8 @@ if submit1:
         nombre_velos = 5
         liste_distances_velos = liste_proches(lat_1, lon_1, df_cyclam, nombre_velos, 'name')    
 
+        # limite de 5 requetes/seconde pour l'api geopf
+        time.sleep(1)
         velo = distance_api_geo(lat_1, lon_1, liste_distances_velos)    
 
         for i in range(1):
@@ -262,6 +270,8 @@ if submit1:
         nombre_bus = 5
         liste_distances_bus = liste_proches(lat_1, lon_1, df_bus, nombre_bus, 'properties.name')   
 
+        # limite de 5 requetes/seconde pour l'api geopf
+        time.sleep(1)
         bus = distance_api_geo(lat_1, lon_1, liste_distances_bus)
 
         for i in range(1):        
@@ -283,6 +293,9 @@ if submit1:
         #st.write('bornes')
         #st.write(liste_distances_bornes)
 
+        # limite de 5 requetes/seconde pour l'api geopf
+        time.sleep(1)
+        
         borne = distance_api_geo(lat_1, lon_1, liste_distances_bornes)
         print('bornes')
         print(borne)
