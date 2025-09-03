@@ -3,7 +3,7 @@ import streamlit as st
 # DEBUT PAGE STREAMLIT
 
 pages = [st.Page('pages/Ardennes_Mobilite.py', title = '🚲 Mobilité Charleville'),
-         st.Page('pages/01_🏠_Ardennes_immo.py', title = '🏠 Ardennes Immo')
+         st.Page('pages/Ardennes_immo.py', title = '🏠 Ardennes Immo')
          ]
   
 

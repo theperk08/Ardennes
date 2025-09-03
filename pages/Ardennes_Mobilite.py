@@ -33,8 +33,8 @@ color_velo = 'blue'
 # BORNES CYCLAM
 url_cyclam = 'data_charleville_parking_cyclam.csv'
 df_cyclam = pd.read_csv(url_cyclam, sep=';')
-df_cyclam['lon'] = df_cyclam['position.longitude']
-df_cyclam['lat'] = df_cyclam['position.latitude']
+# df_cyclam['lon'] = df_cyclam['position.longitude']
+# df_cyclam['lat'] = df_cyclam['position.latitude']
 #df_cyclam['capacite'].fillna(0, inplace = True)
 color_cyclam = 'dodgerblue'
 
@@ -160,8 +160,8 @@ hover_velos = 'Parking vélo' + '<br>' + locations_velos_name + '<br>' + velos_l
 fig_velos = add_point(velos_lat, velos_lon, 10, color_velo, hover_velos) #, hover1)
 
 ## CYCLAM
-cyclam_lat = df_cyclam['position.latitude']
-cyclam_lon = df_cyclam['position.longitude']
+cyclam_lat = df_cyclam.lat
+cyclam_lon = df_cyclam.lon
 locations_cyclam_name = df_cyclam.name
 hover_velos = 'Station Cyclam' + '<br>' + locations_cyclam_name + '<br>' + cyclam_lat.map(lambda x : str(round(x, 4)) + 'N') + ' - ' + cyclam_lon.map(lambda x : str(round(x, 4)) + 'E')
 
