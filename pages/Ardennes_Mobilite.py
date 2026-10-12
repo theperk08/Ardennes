@@ -63,7 +63,7 @@ def add_figure(fig1, fig2):
 
 
 def add_point(lat, lon, size, color, text): #, hovertemp):
-    point = go.Scattermapbox(lat = lat, lon = lon,
+    point = go.Scattermap(lat = lat, lon = lon,
                              mode = 'markers',
                              marker = {'size': size, 'color': color},
                              text = text,
