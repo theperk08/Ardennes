@@ -320,7 +320,7 @@ if submit1:
         autosize=True,
         hovermode='closest',
         showlegend=False,
-        mapbox=dict(
+        map=dict(
             #accesstoken=mapbox_access_token,
             bearing=0,
             center=dict(
